@@ -16,6 +16,8 @@ interface LicenseContextType {
   setIsLicenseModalOpen: (open: boolean) => void;
   isFaqOpen: boolean;
   setIsFaqOpen: (open: boolean) => void;
+  isSummaryOpen: boolean;
+  setIsSummaryOpen: (open: boolean) => void;
 }
 
 const LicenseContext = createContext<LicenseContextType | undefined>(undefined);
@@ -26,6 +28,7 @@ export function LicenseProvider({ children }: { children: React.ReactNode }) {
   const [isWelcomeOpen, setIsWelcomeOpen] = useState<boolean>(false);
   const [isLicenseModalOpen, setIsLicenseModalOpen] = useState<boolean>(false);
   const [isFaqOpen, setIsFaqOpen] = useState<boolean>(false);
+  const [isSummaryOpen, setIsSummaryOpen] = useState<boolean>(false);
 
   // Validate license key format
   const validateKey = (key: string): boolean => {
@@ -108,6 +111,8 @@ export function LicenseProvider({ children }: { children: React.ReactNode }) {
         setIsLicenseModalOpen,
         isFaqOpen,
         setIsFaqOpen,
+        isSummaryOpen,
+        setIsSummaryOpen,
       }}
     >
       {children}

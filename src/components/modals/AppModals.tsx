@@ -5,6 +5,7 @@ import { useLicense } from '@/context/LicenseContext';
 import { WelcomeModal } from './WelcomeModal';
 import { LicenseModal } from './LicenseModal';
 import { FaqModal } from './FaqModal';
+import { SummaryPrintModal } from './SummaryPrintModal';
 
 export const AppModals: React.FC = () => {
   const {
@@ -14,6 +15,8 @@ export const AppModals: React.FC = () => {
     setIsLicenseModalOpen,
     isFaqOpen,
     setIsFaqOpen,
+    isSummaryOpen,
+    setIsSummaryOpen,
     licenseKey,
     isLicensed,
     saveLicense,
@@ -30,6 +33,11 @@ export const AppModals: React.FC = () => {
       <FaqModal
         isOpen={isFaqOpen}
         onClose={() => setIsFaqOpen(false)}
+      />
+
+      <SummaryPrintModal
+        isOpen={isSummaryOpen}
+        onClose={() => setIsSummaryOpen(false)}
       />
 
       <LicenseModal
