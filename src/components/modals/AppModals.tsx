@@ -4,6 +4,7 @@ import React from 'react';
 import { useLicense } from '@/context/LicenseContext';
 import { WelcomeModal } from './WelcomeModal';
 import { LicenseModal } from './LicenseModal';
+import { FaqModal } from './FaqModal';
 
 export const AppModals: React.FC = () => {
   const {
@@ -11,6 +12,8 @@ export const AppModals: React.FC = () => {
     setIsWelcomeOpen,
     isLicenseModalOpen,
     setIsLicenseModalOpen,
+    isFaqOpen,
+    setIsFaqOpen,
     licenseKey,
     isLicensed,
     saveLicense,
@@ -22,6 +25,11 @@ export const AppModals: React.FC = () => {
       <WelcomeModal
         isOpen={isWelcomeOpen}
         onClose={() => setIsWelcomeOpen(false)}
+      />
+
+      <FaqModal
+        isOpen={isFaqOpen}
+        onClose={() => setIsFaqOpen(false)}
       />
 
       <LicenseModal

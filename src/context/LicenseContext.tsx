@@ -14,6 +14,8 @@ interface LicenseContextType {
   setIsWelcomeOpen: (open: boolean) => void;
   isLicenseModalOpen: boolean;
   setIsLicenseModalOpen: (open: boolean) => void;
+  isFaqOpen: boolean;
+  setIsFaqOpen: (open: boolean) => void;
 }
 
 const LicenseContext = createContext<LicenseContextType | undefined>(undefined);
@@ -23,18 +25,19 @@ export function LicenseProvider({ children }: { children: React.ReactNode }) {
   const [isLicensed, setIsLicensed] = useState<boolean>(false);
   const [isWelcomeOpen, setIsWelcomeOpen] = useState<boolean>(false);
   const [isLicenseModalOpen, setIsLicenseModalOpen] = useState<boolean>(false);
+  const [isFaqOpen, setIsFaqOpen] = useState<boolean>(false);
 
   // Validate license key format
   const validateKey = (key: string): boolean => {
     if (!key || key.trim().length < 4) return false;
-    return true; // Accepts valid formatted keys or custom buyer tokens
+    return true;
   };
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // 1. Check URL parameters for automatic token/key authentication (?key=... or ?token=... or ?license=...)
     try {
+      // 1. Check URL parameters
       const params = new URLSearchParams(window.location.search);
       const urlKey = params.get('key') || params.get('token') || params.get('license');
 
@@ -103,6 +106,8 @@ export function LicenseProvider({ children }: { children: React.ReactNode }) {
         },
         isLicenseModalOpen,
         setIsLicenseModalOpen,
+        isFaqOpen,
+        setIsFaqOpen,
       }}
     >
       {children}

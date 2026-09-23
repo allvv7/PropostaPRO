@@ -5,7 +5,7 @@ import { useProposal } from '@/context/ProposalContext';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { ThemeSelector } from './ThemeSelector';
-import { Building2, Upload, Trash2, Mail, Phone, MapPin, Globe, Palette } from 'lucide-react';
+import { Building2, Upload, Trash2, Mail, Phone, MapPin, Globe, Palette, QrCode, CreditCard } from 'lucide-react';
 
 const COLOR_PRESETS = [
   { name: 'Azul Pro', value: '#1e3a8a' },
@@ -44,9 +44,10 @@ export const ProviderSection: React.FC = () => {
 
   return (
     <Card
-      title="Dados do Prestador & Identidade Visual"
-      subtitle="Configure o visual e as informações profissionais que aparecem no topo da proposta"
+      title="1. Dados do Prestador & Identidade Visual"
+      subtitle="Configure o visual da sua marca, contatos e dados para recebimento via PIX"
       icon={<Building2 size={20} />}
+      collapsible
       defaultOpen
     >
       <div className="space-y-6">
@@ -136,18 +137,18 @@ export const ProviderSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Inputs */}
+        {/* Basic Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             label="Nome Completo ou Razão Social"
-            placeholder="Ex: Studio Nexus Design & Tech"
+            placeholder="Ex: Studio Nexus Design & Tech ou João Silva"
             value={proposal.provider.name}
             onChange={(e) => updateProvider({ name: e.target.value })}
             required
           />
 
           <Input
-            label="CPF ou CNPJ"
+            label="CPF ou CNPJ do Prestador"
             placeholder="00.000.000/0001-00"
             value={proposal.provider.document}
             onChange={(e) => updateProvider({ document: e.target.value })}
@@ -179,12 +180,41 @@ export const ProviderSection: React.FC = () => {
           />
 
           <Input
-            label="Website / Portfólio"
+            label="Website / Portfólio (Opcional)"
             placeholder="https://meuportfolio.com.br"
             icon={<Globe size={16} />}
             value={proposal.provider.website || ''}
             onChange={(e) => updateProvider({ website: e.target.value })}
           />
+        </div>
+
+        {/* PIX and Banking Details Box */}
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 space-y-3">
+          <div className="flex items-center gap-2">
+            <QrCode size={16} className="text-emerald-500" />
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Dados para Pagamento e Chave PIX (Aparece no Rodapé / Condições)
+            </h4>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Input
+              label="Chave PIX (Opcional)"
+              placeholder="Ex: 12.345.678/0001-90 ou contato@empresa.com"
+              icon={<QrCode size={16} />}
+              value={proposal.provider.pixKey || ''}
+              onChange={(e) => updateProvider({ pixKey: e.target.value })}
+              helperText="Facilita para o cliente pagar o adiantamento na hora"
+            />
+
+            <Input
+              label="Dados Bancários Adicionais (Opcional)"
+              placeholder="Ex: Banco Inter (077) • Ag: 0001 • CC: 12345-6"
+              icon={<CreditCard size={16} />}
+              value={proposal.provider.bankInfo || ''}
+              onChange={(e) => updateProvider({ bankInfo: e.target.value })}
+            />
+          </div>
         </div>
       </div>
     </Card>

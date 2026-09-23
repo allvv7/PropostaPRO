@@ -1,7 +1,13 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { ProposalData } from '@/types/proposal';
-import { formatCurrency, formatDate, calculateSubtotal, calculateDiscountAmount, calculateTotal } from '@/lib/formatters';
+import {
+  formatCurrency,
+  formatDate,
+  calculateSubtotal,
+  calculateDiscountAmount,
+  calculateTotal,
+} from '@/lib/formatters';
 
 const styles = StyleSheet.create({
   page: {
@@ -15,13 +21,13 @@ const styles = StyleSheet.create({
   accentBar: {
     height: 4,
     borderRadius: 2,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    paddingBottom: 16,
+    paddingBottom: 14,
     borderBottomWidth: 1,
     borderBottomColor: '#e2e8f0',
     borderBottomStyle: 'solid',
@@ -30,23 +36,23 @@ const styles = StyleSheet.create({
     maxWidth: '58%',
   },
   logo: {
-    maxHeight: 48,
+    maxHeight: 44,
     maxWidth: 160,
     objectFit: 'contain',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   providerName: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: 'Helvetica-Bold',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   textMuted: {
     color: '#64748b',
-    fontSize: 8.5,
-    marginBottom: 2,
+    fontSize: 8,
+    marginBottom: 1.5,
   },
   metaBox: {
-    padding: 10,
+    padding: 8,
     borderRadius: 6,
     borderWidth: 1,
     borderStyle: 'solid',
@@ -54,65 +60,71 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   metaBadge: {
-    fontSize: 8,
+    fontSize: 7.5,
     fontFamily: 'Helvetica-Bold',
     textTransform: 'uppercase',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
-    marginBottom: 4,
+    marginBottom: 3,
   },
   proposalNumber: {
-    fontSize: 11,
+    fontSize: 10,
     fontFamily: 'Helvetica-Bold',
     color: '#0f172a',
     marginBottom: 2,
   },
   titleSection: {
-    marginVertical: 14,
+    marginVertical: 10,
   },
   projectLabel: {
-    fontSize: 7.5,
+    fontSize: 7,
     fontFamily: 'Helvetica-Bold',
     textTransform: 'uppercase',
     color: '#94a3b8',
     marginBottom: 2,
   },
   projectTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: 'Helvetica-Bold',
     color: '#0f172a',
   },
+  projectSummary: {
+    fontSize: 7.5,
+    color: '#475569',
+    marginTop: 3,
+    lineHeight: 1.3,
+  },
   clientBox: {
-    padding: 10,
+    padding: 8,
     borderRadius: 6,
     borderWidth: 1,
     borderStyle: 'solid',
-    marginBottom: 16,
+    marginBottom: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   clientLabel: {
-    fontSize: 7.5,
+    fontSize: 7,
     fontFamily: 'Helvetica-Bold',
     textTransform: 'uppercase',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   clientName: {
-    fontSize: 10,
+    fontSize: 9.5,
     fontFamily: 'Helvetica-Bold',
     color: '#0f172a',
   },
   table: {
-    marginTop: 6,
-    marginBottom: 12,
+    marginTop: 4,
+    marginBottom: 10,
   },
   tableHeader: {
     flexDirection: 'row',
-    paddingVertical: 6,
-    paddingHorizontal: 8,
+    paddingVertical: 5,
+    paddingHorizontal: 6,
     borderRadius: 4,
-    marginBottom: 4,
+    marginBottom: 3,
   },
   tableHeaderColIndex: { width: '6%', textAlign: 'center' },
   tableHeaderColDesc: { width: '56%' },
@@ -120,38 +132,38 @@ const styles = StyleSheet.create({
   tableHeaderColUnit: { width: '14%', textAlign: 'right' },
   tableHeaderColTotal: { width: '14%', textAlign: 'right' },
   tableHeaderText: {
-    fontSize: 8,
+    fontSize: 7.5,
     fontFamily: 'Helvetica-Bold',
     textTransform: 'uppercase',
     color: '#ffffff',
   },
   tableRow: {
     flexDirection: 'row',
-    paddingVertical: 6,
-    paddingHorizontal: 8,
+    paddingVertical: 5,
+    paddingHorizontal: 6,
     borderBottomWidth: 1,
     borderBottomColor: '#f1f5f9',
     borderBottomStyle: 'solid',
   },
   itemDesc: {
-    fontSize: 8.5,
+    fontSize: 8,
     fontFamily: 'Helvetica-Bold',
     color: '#0f172a',
   },
   itemDetails: {
-    fontSize: 7.5,
+    fontSize: 7,
     color: '#64748b',
-    marginTop: 2,
-    lineHeight: 1.3,
+    marginTop: 1.5,
+    lineHeight: 1.25,
   },
   totalsContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   totalsBox: {
     width: 200,
-    padding: 8,
+    padding: 7,
     borderRadius: 6,
     borderWidth: 1,
     borderStyle: 'solid',
@@ -159,62 +171,69 @@ const styles = StyleSheet.create({
   totalsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 3,
-    fontSize: 8.5,
+    marginBottom: 2,
+    fontSize: 8,
   },
   totalsGrandRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 4,
+    paddingTop: 3,
     borderTopWidth: 1,
     borderTopStyle: 'solid',
-    fontSize: 10,
+    fontSize: 9.5,
     fontFamily: 'Helvetica-Bold',
   },
   conditionsGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 8,
-    marginBottom: 14,
+    marginBottom: 8,
   },
   conditionCard: {
     flex: 1,
-    padding: 8,
+    padding: 7,
     borderRadius: 6,
     borderWidth: 1,
     borderStyle: 'solid',
   },
   conditionTitle: {
-    fontSize: 8,
+    fontSize: 7.5,
     fontFamily: 'Helvetica-Bold',
-    marginBottom: 3,
+    marginBottom: 2,
   },
   conditionText: {
-    fontSize: 7.5,
+    fontSize: 7,
     color: '#475569',
   },
-  notesBox: {
-    padding: 8,
+  pixBox: {
+    padding: 7,
     borderRadius: 6,
     borderWidth: 1,
     borderStyle: 'solid',
-    marginBottom: 20,
+    marginBottom: 8,
+  },
+  notesBox: {
+    padding: 7,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    marginBottom: 14,
   },
   notesTitle: {
-    fontSize: 8,
+    fontSize: 7.5,
     fontFamily: 'Helvetica-Bold',
-    marginBottom: 3,
+    marginBottom: 2,
   },
   notesContent: {
-    fontSize: 7.5,
+    fontSize: 7,
     color: '#475569',
-    lineHeight: 1.3,
+    lineHeight: 1.25,
   },
   signatures: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 24,
-    paddingTop: 8,
+    marginTop: 16,
+    paddingTop: 6,
   },
   sigBlock: {
     width: '40%',
@@ -225,20 +244,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#94a3b8',
     borderBottomStyle: 'solid',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   sigName: {
-    fontSize: 8.5,
+    fontSize: 8,
     fontFamily: 'Helvetica-Bold',
     color: '#0f172a',
   },
   sigRole: {
-    fontSize: 7.5,
+    fontSize: 7,
     color: '#64748b',
   },
   footer: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 18,
     left: 36,
     right: 36,
     flexDirection: 'row',
@@ -246,8 +265,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#f1f5f9',
     borderTopStyle: 'solid',
-    paddingTop: 6,
-    fontSize: 7,
+    paddingTop: 5,
+    fontSize: 6.5,
     color: '#94a3b8',
   },
 });
@@ -343,12 +362,15 @@ export const ProposalPdfDocument: React.FC<ProposalPdfDocumentProps> = ({ propos
           </View>
         </View>
 
-        {/* Title */}
+        {/* Title & Summary */}
         <View style={styles.titleSection}>
           <Text style={styles.projectLabel}>Projeto / Escopo</Text>
           <Text style={styles.projectTitle}>
             {proposal.title || 'Prestação de Serviços Profissionais'}
           </Text>
+          {proposal.projectSummary ? (
+            <Text style={styles.projectSummary}>{proposal.projectSummary}</Text>
+          ) : null}
         </View>
 
         {/* Client Box */}
@@ -364,6 +386,9 @@ export const ProposalPdfDocument: React.FC<ProposalPdfDocumentProps> = ({ propos
           <View style={{ maxWidth: '60%' }}>
             <Text style={[styles.clientLabel, { color: primaryColor }]}>Destinatário / Cliente</Text>
             <Text style={styles.clientName}>{proposal.client.name || 'Nome do Cliente'}</Text>
+            {proposal.client.contactRole ? (
+              <Text style={styles.textMuted}>{proposal.client.contactRole}</Text>
+            ) : null}
             {proposal.client.companyName ? (
               <Text style={[styles.textMuted, { fontFamily: 'Helvetica-Bold' }]}>
                 {proposal.client.companyName}
@@ -432,7 +457,7 @@ export const ProposalPdfDocument: React.FC<ProposalPdfDocumentProps> = ({ propos
                 ]}
               >
                 <View style={styles.tableHeaderColIndex}>
-                  <Text style={{ fontSize: 8, color: '#94a3b8' }}>{index + 1}</Text>
+                  <Text style={{ fontSize: 7.5, color: '#94a3b8' }}>{index + 1}</Text>
                 </View>
                 <View style={styles.tableHeaderColDesc}>
                   <Text style={styles.itemDesc}>{item.description || 'Item'}</Text>
@@ -441,15 +466,15 @@ export const ProposalPdfDocument: React.FC<ProposalPdfDocumentProps> = ({ propos
                   ) : null}
                 </View>
                 <View style={styles.tableHeaderColQty}>
-                  <Text style={{ fontSize: 8.5, textAlign: 'center' }}>{item.quantity}</Text>
+                  <Text style={{ fontSize: 7.5, textAlign: 'center' }}>{item.quantity}</Text>
                 </View>
                 <View style={styles.tableHeaderColUnit}>
-                  <Text style={{ fontSize: 8.5, textAlign: 'right' }}>
+                  <Text style={{ fontSize: 7.5, textAlign: 'right' }}>
                     {formatCurrency(item.unitPrice, proposal.currency)}
                   </Text>
                 </View>
                 <View style={styles.tableHeaderColTotal}>
-                  <Text style={{ fontSize: 8.5, fontFamily: 'Helvetica-Bold', textAlign: 'right', color: '#0f172a' }}>
+                  <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', textAlign: 'right', color: '#0f172a' }}>
                     {formatCurrency(itemTotal, proposal.currency)}
                   </Text>
                 </View>
@@ -529,6 +554,31 @@ export const ProposalPdfDocument: React.FC<ProposalPdfDocumentProps> = ({ propos
           </View>
         </View>
 
+        {/* PIX Details */}
+        {(proposal.provider.pixKey || proposal.provider.bankInfo) ? (
+          <View
+            style={[
+              styles.pixBox,
+              {
+                backgroundColor: isMinimalist ? '#fafafa' : '#f0fdf4',
+                borderColor: isMinimalist ? '#e4e4e7' : '#bbf7d0',
+              },
+            ]}
+          >
+            <Text style={[styles.conditionTitle, { color: isMinimalist ? primaryColor : '#166534' }]}>
+              Dados para Pagamento / Chave PIX:
+            </Text>
+            {proposal.provider.pixKey ? (
+              <Text style={{ fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: '#0f172a' }}>
+                PIX: {proposal.provider.pixKey}
+              </Text>
+            ) : null}
+            {proposal.provider.bankInfo ? (
+              <Text style={styles.conditionText}>{proposal.provider.bankInfo}</Text>
+            ) : null}
+          </View>
+        ) : null}
+
         {/* Notes */}
         {proposal.conditions.notes ? (
           <View
@@ -541,7 +591,7 @@ export const ProposalPdfDocument: React.FC<ProposalPdfDocumentProps> = ({ propos
             ]}
           >
             <Text style={[styles.notesTitle, { color: primaryColor }]}>
-              Termos e Condições Gerais
+              Termos Gerais & Cláusulas de Aceite
             </Text>
             <Text style={styles.notesContent}>{proposal.conditions.notes}</Text>
           </View>

@@ -9,7 +9,6 @@ import {
   FileSpreadsheet,
   RotateCcw,
   Sparkles,
-  CheckCircle,
   Edit3,
   Eye,
   Download,
@@ -17,11 +16,12 @@ import {
   HelpCircle,
   KeyRound,
   ShieldCheck,
+  MessageCircleQuestion,
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { loadSampleData, resetProposal, isLoaded, activeTab, setActiveTab, addItem, proposal } = useProposal();
-  const { isLicensed, setIsWelcomeOpen, setIsLicenseModalOpen } = useLicense();
+  const { isLicensed, setIsWelcomeOpen, setIsLicenseModalOpen, setIsFaqOpen } = useLicense();
   const [isExporting, setIsExporting] = useState(false);
 
   const handleReset = () => {
@@ -47,7 +47,7 @@ export const Header: React.FC = () => {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Brand & License status */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 shrink-0">
             <FileSpreadsheet size={22} />
           </div>
           <div>
@@ -71,7 +71,7 @@ export const Header: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <KeyRound size={11} /> DEMO / ATIVAR
+                    <KeyRound size={11} /> ATIVAR PRO
                   </>
                 )}
               </button>
@@ -110,26 +110,26 @@ export const Header: React.FC = () => {
 
         {/* Actions Toolbar */}
         <div className="flex items-center gap-1.5 sm:gap-2.5">
-          {/* Help / Walkthrough button */}
+          {/* FAQ Button */}
+          <button
+            type="button"
+            onClick={() => setIsFaqOpen(true)}
+            className="p-2 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1 text-xs font-medium"
+            title="Dúvidas Frequentes & Guia de Uso"
+          >
+            <MessageCircleQuestion size={17} className="text-amber-500" />
+            <span className="hidden xl:inline">Dúvidas / FAQ</span>
+          </button>
+
+          {/* Instructions Button */}
           <button
             type="button"
             onClick={() => setIsWelcomeOpen(true)}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1 text-xs font-medium"
-            title="Como usar o PropostaPRO"
+            className="p-2 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1 text-xs font-medium"
+            title="Instruções em 3 passos"
           >
-            <HelpCircle size={17} className="text-blue-600 dark:text-blue-400" />
+            <HelpCircle size={17} className="text-blue-500" />
             <span className="hidden xl:inline">Instruções</span>
-          </button>
-
-          {/* License settings trigger */}
-          <button
-            type="button"
-            onClick={() => setIsLicenseModalOpen(true)}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1 text-xs font-medium"
-            title="Gerenciar Licença"
-          >
-            <KeyRound size={16} className="text-amber-500" />
-            <span className="hidden xl:inline">Licença</span>
           </button>
 
           <Button
@@ -175,7 +175,7 @@ export const Header: React.FC = () => {
             isLoading={isExporting}
             onClick={handleQuickDownload}
             title="Baixar proposta em PDF instantaneamente"
-            className="bg-blue-600 hover:bg-blue-700 shadow-sm"
+            className="bg-blue-600 hover:bg-blue-700 shadow-sm font-bold"
           >
             <span className="hidden xs:inline">Baixar PDF</span>
           </Button>

@@ -7,7 +7,18 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { formatCurrency, calculateSubtotal, calculateDiscountAmount, calculateTotal } from '@/lib/formatters';
-import { ListPlus, Trash2, Plus, Percent, FileText, Calendar, Hash } from 'lucide-react';
+import {
+  ListPlus,
+  Trash2,
+  Plus,
+  Percent,
+  FileText,
+  Calendar,
+  Hash,
+  Layers,
+  Sparkles,
+  Milestone as MilestoneIcon,
+} from 'lucide-react';
 
 export const ItemsSection: React.FC = () => {
   const {
@@ -16,6 +27,9 @@ export const ItemsSection: React.FC = () => {
     addItem,
     removeItem,
     updateItem,
+    addMilestone,
+    removeMilestone,
+    updateMilestone,
   } = useProposal();
 
   const subtotal = calculateSubtotal(proposal.items);
@@ -28,8 +42,8 @@ export const ItemsSection: React.FC = () => {
 
   return (
     <Card
-      title="Proposta & Escopo de Serviços"
-      subtitle="Defina o título, numeração e liste os itens com quantidades e valores"
+      title="3. Escopo, Serviços & Cronograma de Entrega"
+      subtitle="Defina o título do projeto, descreva os serviços, valores unitários e etapas previstas"
       icon={<ListPlus size={20} />}
       collapsible
       defaultOpen
@@ -40,7 +54,7 @@ export const ItemsSection: React.FC = () => {
           <div className="sm:col-span-3">
             <Input
               label="Título do Projeto / Proposta"
-              placeholder="Ex: Desenvolvimento de E-commerce & Design de Marca"
+              placeholder="Ex: Desenvolvimento de Website Institucional e Identidade Visual"
               icon={<FileText size={16} />}
               value={proposal.title}
               onChange={(e) => updateMeta({ title: e.target.value })}
@@ -48,9 +62,19 @@ export const ItemsSection: React.FC = () => {
             />
           </div>
 
+          <div className="sm:col-span-3">
+            <Textarea
+              label="Resumo / Apresentação do Projeto (Opcional)"
+              placeholder="Apresente brevemente o objetivo da proposta, dores resolvidas e o contexto do serviço..."
+              rows={2}
+              value={proposal.projectSummary || ''}
+              onChange={(e) => updateMeta({ projectSummary: e.target.value })}
+            />
+          </div>
+
           <div>
             <Input
-              label="Número / Código da Proposta"
+              label="Código / Número da Proposta"
               placeholder="PROP-2026-001"
               icon={<Hash size={16} />}
               value={proposal.proposalNumber}
@@ -87,7 +111,8 @@ export const ItemsSection: React.FC = () => {
         {/* Dynamic Items List */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+            <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+              <Layers size={16} className="text-blue-500" />
               Itens e Serviços Orçados ({proposal.items.length})
             </h4>
           </div>
@@ -161,7 +186,7 @@ export const ItemsSection: React.FC = () => {
 
                   <div className="md:col-span-12">
                     <Textarea
-                      label="Detalhamento / Entregáveis (opcional)"
+                      label="Detalhamento / Entregáveis do Item (Opcional)"
                       placeholder="Descreva o escopo detalhado, etapas inclusas, formatos de entrega..."
                       rows={2}
                       value={item.details || ''}
@@ -181,8 +206,78 @@ export const ItemsSection: React.FC = () => {
             onClick={addItem}
             className="w-full border-dashed border-2 py-3"
           >
-            Adicionar Outro Item / Serviço
+            + Adicionar Outro Item / Serviço
           </Button>
+        </div>
+
+        {/* Project Milestones (Cronograma de Etapas Opcional) */}
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MilestoneIcon size={16} className="text-indigo-500" />
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                Cronograma de Etapas & Entregas (Opcional)
+              </h4>
+            </div>
+            <button
+              type="button"
+              onClick={addMilestone}
+              className="text-xs text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1"
+            >
+              <Plus size={14} /> Adicionar Etapa
+            </button>
+          </div>
+
+          {(proposal.milestones || []).length === 0 ? (
+            <p className="text-xs text-slate-400 italic">
+              Nenhuma etapa cadastrada. Clique em &quot;+ Adicionar Etapa&quot; para detalhar o cronograma (ex: Briefing, Protótipo, Homologação, Entrega Final).
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {(proposal.milestones || []).map((m, mIdx) => (
+                <div
+                  key={m.id}
+                  className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      Etapa {mIdx + 1}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeMilestone(m.id)}
+                      className="text-slate-400 hover:text-rose-500"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                    <div className="sm:col-span-4">
+                      <Input
+                        placeholder="Nome da etapa (Ex: Protótipo)"
+                        value={m.title}
+                        onChange={(e) => updateMilestone(m.id, { title: e.target.value })}
+                      />
+                    </div>
+                    <div className="sm:col-span-3">
+                      <Input
+                        placeholder="Prazo (Ex: 5 dias úteis)"
+                        value={m.deadline}
+                        onChange={(e) => updateMilestone(m.id, { deadline: e.target.value })}
+                      />
+                    </div>
+                    <div className="sm:col-span-5">
+                      <Input
+                        placeholder="Entregável (Ex: Telas em alta definição)"
+                        value={m.deliverable}
+                        onChange={(e) => updateMilestone(m.id, { deliverable: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Discount & Totals Section */}

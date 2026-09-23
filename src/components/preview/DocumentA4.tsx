@@ -2,8 +2,27 @@
 
 import React from 'react';
 import { useProposal } from '@/context/ProposalContext';
-import { formatCurrency, formatDate, calculateSubtotal, calculateDiscountAmount, calculateTotal } from '@/lib/formatters';
-import { Mail, Phone, MapPin, Globe, CheckCircle2, Clock, CreditCard, Calendar } from 'lucide-react';
+import {
+  formatCurrency,
+  formatDate,
+  calculateSubtotal,
+  calculateDiscountAmount,
+  calculateTotal,
+} from '@/lib/formatters';
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Globe,
+  CheckCircle2,
+  Clock,
+  CreditCard,
+  Calendar,
+  QrCode,
+  Award,
+  AlertCircle,
+  Milestone,
+} from 'lucide-react';
 
 export const DocumentA4: React.FC = () => {
   const { proposal } = useProposal();
@@ -31,8 +50,8 @@ export const DocumentA4: React.FC = () => {
         boxSizing: 'border-box',
       }}
     >
-      {/* Top Accent Line (Corporate) */}
       <div>
+        {/* Top Accent Line (Corporate) */}
         {!isMinimalist && (
           <div
             className="h-2 w-full rounded-full mb-8"
@@ -70,7 +89,8 @@ export const DocumentA4: React.FC = () => {
             <div className="text-xs text-slate-600 space-y-1">
               {proposal.provider.document && (
                 <div>
-                  <span className="font-medium text-slate-800">CNPJ/CPF:</span> {proposal.provider.document}
+                  <span className="font-medium text-slate-800">CNPJ/CPF:</span>{' '}
+                  {proposal.provider.document}
                 </div>
               )}
               {proposal.provider.address && (
@@ -135,7 +155,7 @@ export const DocumentA4: React.FC = () => {
           </div>
         </div>
 
-        {/* Project Title Banner */}
+        {/* Project Title Banner & Summary */}
         <div className="my-6">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
             Projeto / Escopo Principal
@@ -143,6 +163,11 @@ export const DocumentA4: React.FC = () => {
           <h1 className="text-xl font-bold text-slate-900 mt-1 leading-snug">
             {proposal.title || 'Proposta de Prestação de Serviços'}
           </h1>
+          {proposal.projectSummary && (
+            <p className="text-xs text-slate-600 mt-2 leading-relaxed bg-slate-50/70 p-3 rounded-lg border border-slate-100">
+              {proposal.projectSummary}
+            </p>
+          )}
         </div>
 
         {/* Client Box */}
@@ -163,8 +188,11 @@ export const DocumentA4: React.FC = () => {
               <div className="font-bold text-sm text-slate-900">
                 {proposal.client.name || 'Nome do Cliente'}
               </div>
+              {proposal.client.contactRole && (
+                <div className="text-slate-500 text-[11px]">{proposal.client.contactRole}</div>
+              )}
               {proposal.client.companyName && (
-                <div className="text-slate-700 font-medium">{proposal.client.companyName}</div>
+                <div className="text-slate-700 font-medium mt-0.5">{proposal.client.companyName}</div>
               )}
               {proposal.client.document && (
                 <div className="text-slate-500 mt-0.5">CNPJ/CPF: {proposal.client.document}</div>
@@ -288,10 +316,40 @@ export const DocumentA4: React.FC = () => {
           </div>
         </div>
 
+        {/* Milestones / Cronograma (Se preenchido) */}
+        {(proposal.milestones || []).length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center gap-1.5 mb-2.5">
+              <Milestone size={14} style={{ color: primaryColor }} />
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
+                Cronograma de Entregas
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              {proposal.milestones.map((m, idx) => (
+                <div
+                  key={m.id}
+                  className="p-3 rounded-lg border border-slate-200/80 bg-slate-50/50 flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between font-semibold text-slate-900 mb-1">
+                    <span>
+                      {idx + 1}. {m.title || 'Etapa'}
+                    </span>
+                    <span className="text-[11px] font-normal text-slate-500">{m.deadline}</span>
+                  </div>
+                  {m.deliverable && (
+                    <p className="text-[11px] text-slate-600">{m.deliverable}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Commercial Conditions */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           <div
-            className={`p-4 rounded-xl border text-xs space-y-2 ${
+            className={`p-4 rounded-xl border text-xs space-y-1.5 ${
               isMinimalist ? 'bg-white border-zinc-200' : 'bg-slate-50 border-slate-200/80'
             }`}
           >
@@ -303,7 +361,7 @@ export const DocumentA4: React.FC = () => {
           </div>
 
           <div
-            className={`p-4 rounded-xl border text-xs space-y-2 ${
+            className={`p-4 rounded-xl border text-xs space-y-1.5 ${
               isMinimalist ? 'bg-white border-zinc-200' : 'bg-slate-50 border-slate-200/80'
             }`}
           >
@@ -315,6 +373,61 @@ export const DocumentA4: React.FC = () => {
           </div>
         </div>
 
+        {/* PIX and Payment Banner */}
+        {(proposal.provider.pixKey || proposal.provider.bankInfo) && (
+          <div
+            className={`p-4 rounded-xl border mb-6 text-xs ${
+              isMinimalist ? 'bg-zinc-50 border-zinc-300' : 'bg-emerald-50/60 border-emerald-200'
+            }`}
+          >
+            <div className="font-bold text-slate-900 flex items-center gap-1.5 mb-1.5">
+              <QrCode size={14} className="text-emerald-600" />
+              <span>Dados para Pagamento / PIX:</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-700">
+              {proposal.provider.pixKey && (
+                <div>
+                  <span className="font-semibold text-slate-900">Chave PIX:</span>{' '}
+                  <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200">
+                    {proposal.provider.pixKey}
+                  </span>
+                </div>
+              )}
+              {proposal.provider.bankInfo && (
+                <div className="text-[11px] text-slate-600">{proposal.provider.bankInfo}</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Warranty & Extra Scope */}
+        {(proposal.conditions.warranty || proposal.conditions.extraScopeTerms) && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-xs">
+            {proposal.conditions.warranty && (
+              <div className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 space-y-1">
+                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                  <Award size={13} style={{ color: primaryColor }} />
+                  <span>Garantia & Suporte</span>
+                </div>
+                <p className="text-slate-600 text-[11px] leading-relaxed">
+                  {proposal.conditions.warranty}
+                </p>
+              </div>
+            )}
+            {proposal.conditions.extraScopeTerms && (
+              <div className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 space-y-1">
+                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                  <AlertCircle size={13} style={{ color: primaryColor }} />
+                  <span>Escopo Adicional</span>
+                </div>
+                <p className="text-slate-600 text-[11px] leading-relaxed">
+                  {proposal.conditions.extraScopeTerms}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Notes / Clauses */}
         {proposal.conditions.notes && (
           <div
@@ -324,7 +437,7 @@ export const DocumentA4: React.FC = () => {
           >
             <div className="font-bold text-slate-900 mb-2 flex items-center gap-1.5">
               <CheckCircle2 size={14} style={{ color: primaryColor }} />
-              <span>Observações e Termos de Aceite</span>
+              <span>Termos Gerais & Cláusulas de Aceite</span>
             </div>
             <div className="text-slate-600 space-y-1 whitespace-pre-line leading-relaxed">
               {proposal.conditions.notes}
@@ -333,7 +446,7 @@ export const DocumentA4: React.FC = () => {
         )}
 
         {/* Signature Area */}
-        <div className="pt-12 grid grid-cols-2 gap-8 text-center text-xs">
+        <div className="pt-10 grid grid-cols-2 gap-8 text-center text-xs">
           <div>
             <div className="border-b border-slate-400 w-4/5 mx-auto mb-2"></div>
             <div className="font-bold text-slate-900">{proposal.provider.name || 'Prestador'}</div>
