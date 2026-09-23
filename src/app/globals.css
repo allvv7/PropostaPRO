@@ -14,29 +14,6 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-/* Print Optimization */
-@media print {
-  body {
-    background: #ffffff !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  
-  header,
-  .print\\:hidden {
-    display: none !important;
-  }
-
-  #proposal-document {
-    box-shadow: none !important;
-    border: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-}
-
 /* Custom Scrollbar for form and preview panels */
 ::-webkit-scrollbar {
   width: 6px;
@@ -54,4 +31,110 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(148, 163, 184, 0.7);
+}
+
+/* Advanced Print Optimization - Max 1 to 2 Pages */
+@page {
+  size: A4 portrait;
+  margin: 10mm 8mm 10mm 8mm;
+}
+
+@media print {
+  html, body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide entire interface except the proposal document or active print modal */
+  header,
+  footer,
+  aside,
+  form,
+  button,
+  .print\\:hidden,
+  #section-provider,
+  #section-client,
+  #section-items,
+  #section-conditions {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    display: block !important;
+  }
+
+  #proposal-document {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Compact spacing for print */
+  #proposal-document .my-6 {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+  }
+
+  #proposal-document .mb-8 {
+    margin-bottom: 12px !important;
+  }
+
+  #proposal-document .pb-8 {
+    padding-bottom: 10px !important;
+  }
+
+  #proposal-document .pt-12,
+  #proposal-document .pt-10 {
+    padding-top: 14px !important;
+  }
+
+  #proposal-document .mt-12 {
+    margin-top: 10px !important;
+  }
+
+  #proposal-document table th,
+  #proposal-document table td {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+  }
+
+  /* Page break rules */
+  tr,
+  table,
+  .break-inside-avoid,
+  .avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* When printing from the Summary modal */
+  body:has(#printable-summary-content) #proposal-document {
+    display: none !important;
+  }
+
+  body:has(#printable-summary-content) #printable-summary-content {
+    display: block !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    background: #ffffff !important;
+  }
 }
