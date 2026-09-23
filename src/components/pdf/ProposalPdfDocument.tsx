@@ -615,7 +615,7 @@ export const ProposalPdfDocument: React.FC<ProposalPdfDocumentProps> = ({ propos
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text>Documento gerado via PropostaPRO • Confidencial</Text>
+          <Text>Documento Confidencial • Proposta Comercial</Text>
           <Text>Página 1 de 1</Text>
         </View>
       </Page>

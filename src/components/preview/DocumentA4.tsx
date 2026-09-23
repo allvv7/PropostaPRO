@@ -465,7 +465,7 @@ export const DocumentA4: React.FC = () => {
 
       {/* Footer */}
       <div className="pt-8 mt-12 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400">
-        <span>Proposta gerada via PropostaPRO • Documento Confidencial</span>
+        <span>Documento Confidencial • Proposta Comercial</span>
         <span>Página 1 de 1</span>
       </div>
     </div>
